@@ -2,7 +2,7 @@
 
 A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
-Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio.
+Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio. It works in VS Code and in Zed.
 
 ## Included
 
@@ -13,6 +13,16 @@ Use this repository as a base for ESP32 projects that need local development wit
 - Zed tasks and clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
+
+## Use as a template
+
+Click **Use this template** on GitHub, or create a new project from the terminal:
+
+```bash
+gh repo create my-project --template gm64x/platformio-wokwi-esp32 --public --clone
+```
+
+Looking for the Arduino Uno version? See [platformio-wokwi-arduino-uno](https://github.com/gm64x/platformio-wokwi-arduino-uno).
 
 ## Getting started
 
@@ -33,8 +43,10 @@ The project also works in [Zed](https://zed.dev/) through the [PlatformIO Core C
 1. Install PlatformIO Core and make sure `pio` is on your `PATH`, or run `mise install` to get `pio` and `wokwi-cli` from `mise.toml` with [mise](https://mise.jdx.dev/)
 2. Open the folder in Zed
 3. Run `task: spawn` (`alt-shift-t`) and pick a task from `.zed/tasks.json`:
-   - `PlatformIO: Build`, `Upload`, `Upload and Monitor`, `Serial Monitor`, `Clean`, `Test`
-   - `PlatformIO: Generate compile_commands.json (clangd)`
+   - Build and upload: `Build`, `Upload`, `Upload and Monitor`, `Serial Monitor`, `Clean`, `Test`, `Program Size`, `Verbose Build`, `Static Code Analysis`, `Erase Flash`, `Erase Flash and Upload`
+   - Ports: `List Devices (Serial Ports)`, `Select Port`, `Upload to Port …`, `Serial Monitor on Port …`
+   - Libraries: `Search Libraries for …`, `Install Library …`, `Uninstall Library …`, `List Installed Packages`, `Check Outdated Packages`, `Update Packages`
+   - Other: `Search Boards for …`, `System Info`, `Open PIO Home`, `Generate compile_commands.json (clangd)`
    - `Wokwi: Simulate` (build first)
 4. Run the `compile_commands.json` task once (and again after changing `platformio.ini` or libraries) so clangd can resolve `Arduino.h` and the ESP32 headers. `.clangd` removes GCC-only Xtensa flags that clang does not understand.
 
@@ -74,6 +86,68 @@ To run it in the [Velxio editor](https://velxio.dev/editor/) (free, no install):
 
 `velxio.toml` points the [Velxio VS Code extension](https://github.com/davidmonterocrespo24/velxio/tree/master/vscode-extension) (needs a Velxio Pro subscription or trial) at the same merged image, so `Velxio: Run Simulation` loads it without compiling. Velxio has no standalone CLI, so there is no Zed task or `mise.toml` entry for it.
 
+### Libraries and ports from Zed
+
+Zed tasks can't ask for input, so the tasks ending in `…` use the text selected in the editor. They only show up in `task: spawn` while something is selected:
+
+- **Find and add a library:** type a name such as `DHT` anywhere (a scratch buffer works), select it and run `Search Libraries for "DHT"`. Then select the full name from the results, e.g. `adafruit/DHT sensor library`, and run `Install Library`. It is added to `lib_deps` in `platformio.ini`.
+- **Pick a port once:** run `Select Port`. It lists the serial ports, asks for a number in the terminal and saves your choice in `port.local.ini` (git-ignored), which every upload and monitor then uses. Choose `0` to go back to auto-detect.
+- **Use a port just once:** select a port name such as `COM3` or `/dev/ttyUSB0` and run `Upload to Port` or `Serial Monitor on Port`.
+
+In the task picker, `tab` lets you edit a task's command before running it, e.g. to add flags.
+
+All of these are plain `pio` commands, so they work the same on Windows and Linux and from any terminal: `pio pkg search dht`, `pio pkg install --library "adafruit/DHT sensor library"`, `pio device list`, `pio run -t select_port`.
+
+## Linux and Windows setup
+
+Both setups use [mise](https://mise.jdx.dev/) to install the pinned `pio` and `wokwi-cli` from `mise.toml`. If you already have PlatformIO Core on your `PATH`, skip the mise steps.
+
+### Linux
+
+1. Install mise and enable it in your shell:
+
+   ```bash
+   curl https://mise.run | sh
+   echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc   # or ~/.zshrc with "activate zsh"
+   ```
+
+2. In the project folder, install the tools:
+
+   ```bash
+   mise trust && mise install
+   ```
+
+3. Allow uploads to the board without `sudo` (PlatformIO udev rules and serial group), then log out and back in:
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
+   sudo udevadm control --reload-rules && sudo udevadm trigger
+   sudo usermod -a -G dialout $USER   # on Arch-based distros the group is "uucp"
+   ```
+
+4. Optional: install Zed with `curl -f https://zed.dev/install.sh | sh`.
+5. Optional, for `wokwi-cli`: `export WOKWI_CLI_TOKEN=<token>` (add it to `~/.bashrc` to keep it).
+
+The board shows up as `/dev/ttyUSB0` (CP210x/CH340) or `/dev/ttyACM0`. **WSL:** build and simulate inside WSL, but USB devices are not visible there by default. Upload from Windows, or attach the board with [usbipd-win](https://learn.microsoft.com/windows/wsl/connect-usb).
+
+### Windows
+
+1. Install mise from PowerShell, with `winget install jdx.mise` or `scoop install mise`.
+2. Make the tools available in every terminal: add `%LOCALAPPDATA%\mise\shims` to your user `PATH`, or add `mise activate pwsh | Out-String | Invoke-Expression` to your PowerShell `$PROFILE`.
+3. In the project folder, install the tools:
+
+   ```powershell
+   mise trust; mise install
+   ```
+
+4. Install the USB-to-serial driver if Windows doesn't detect the board: ESP32 DevKit boards use a CP210x ([Silicon Labs driver](https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers)) or CH340 ([WCH driver](https://www.wch-ic.com/downloads/CH341SER_EXE.html)) chip; check the chip near the USB connector.
+5. Optional: install [Zed for Windows](https://zed.dev/download).
+6. Optional, for `wokwi-cli`: `setx WOKWI_CLI_TOKEN "<token>"`, then open a new terminal.
+
+The board shows up as a `COM` port (for example `COM3`). Check **Device Manager > Ports (COM & LPT)** or run `pio device list`.
+
+PlatformIO picks the upload port automatically on both systems. To choose one, run `pio run -t select_port` (or the `Select Port` Zed task), or add `upload_port = COM3` (Windows) or `upload_port = /dev/ttyUSB0` (Linux) to the `[env]` section of `platformio.ini`.
+
 ## Project structure
 
 ```
@@ -84,6 +158,7 @@ To run it in the [Velxio editor](https://velxio.dev/editor/) (free, no install):
 ├── wokwi.toml        # Wokwi simulation configuration
 ├── velxio.toml       # Velxio simulation configuration
 ├── compiledb.py      # Adds toolchain headers to compile_commands.json
+├── port_select.py    # Adds `pio run -t select_port`
 ├── merge_firmware.py # Builds the merged flash image for Velxio
 ├── velxio_project.py # Builds the Velxio project zip
 ├── velxio/
