@@ -6,7 +6,7 @@ Use this repository as a base for ESP32 projects that need local development wit
 
 ## Included
 
-- PlatformIO configuration for the ESP32 DevKit (`esp32dev`)
+- PlatformIO configuration for the ESP32 DevKit (`esp32dev`), pinned to the official `platformio/espressif32 @ 7.1.3` platform (arduino-esp32 2.0.17). For arduino-esp32 3.x see the `dev/arduino-3` branch
 - Arduino framework, serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
 - Velxio simulation from a merged 4 MB flash image and an importable project zip, built on every `pio run`
