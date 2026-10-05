@@ -1,0 +1,7 @@
+# Velxio simulator config, read by the Velxio VS Code extension.
+# Velxio's ESP32 (QEMU) needs the merged 4 MB flash image built by merge_firmware.py.
+[velxio]
+version = 1
+board = "esp32"
+firmware = ".pio/build/esp32dev/firmware.merged.bin"
+elf = ".pio/build/esp32dev/firmware.elf"
