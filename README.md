@@ -1,14 +1,15 @@
 # PlatformIO Wokwi ESP32
 
-A reusable ESP32 DevKit starter project for PlatformIO and Wokwi.
+A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
-Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi.
+Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio.
 
 ## Included
 
 - PlatformIO configuration for the ESP32 DevKit (`esp32dev`)
 - Arduino framework, serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
+- Velxio simulation from a merged 4 MB flash image built on every `pio run`
 - Zed tasks and clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
@@ -52,6 +53,21 @@ The Wokwi configuration uses the PlatformIO build output:
 
 Edit `src/main.cpp` to add your application code and `diagram.json` to add components and wiring for your simulation.
 
+### Using Velxio
+
+[Velxio](https://velxio.dev/) is an open-source browser simulator for Arduino, ESP32 and Raspberry Pi boards. It runs ESP32 firmware in QEMU, which boots from a full flash image instead of the app-only `firmware.bin`, so `merge_firmware.py` runs after every build and writes:
+
+- Merged image: `.pio/build/esp32dev/firmware.merged.bin` (bootloader, partitions, `boot_app0` and app, 4 MB, DIO)
+
+To run it in the [Velxio editor](https://velxio.dev/editor/) (free, no install):
+
+1. Build the project with `pio run`
+2. Add an **ESP32 DevKit C V4** board (or ESP32 DevKit V1) to the canvas
+3. Pick **Upload firmware** from the menu, select `firmware.merged.bin` and start the simulation
+4. Open the Serial Monitor to see `2 + 3 = 5`
+
+`velxio.toml` points the [Velxio VS Code extension](https://github.com/davidmonterocrespo24/velxio/tree/master/vscode-extension) (needs a Velxio Pro subscription or trial) at the same merged image, so `Velxio: Run Simulation` loads it without compiling. Velxio has no standalone CLI, so there is no Zed task or `mise.toml` entry for it.
+
 ## Project structure
 
 ```
@@ -60,7 +76,9 @@ Edit `src/main.cpp` to add your application code and `diagram.json` to add compo
 ├── platformio.ini    # PlatformIO configuration
 ├── mise.toml         # Dev tools (pio, wokwi-cli) for mise
 ├── wokwi.toml        # Wokwi simulation configuration
+├── velxio.toml       # Velxio simulation configuration
 ├── compiledb.py      # Adds toolchain headers to compile_commands.json
+├── merge_firmware.py # Builds the merged flash image for Velxio
 ├── .clangd           # clangd settings for Zed
 ├── .zed/             # Zed tasks and project settings
 ├── src/
