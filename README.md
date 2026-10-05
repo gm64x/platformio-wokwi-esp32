@@ -9,7 +9,7 @@ Use this repository as a base for ESP32 projects that need local development wit
 - PlatformIO configuration for the ESP32 DevKit (`esp32dev`)
 - Arduino framework, serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
-- Velxio simulation from a merged 4 MB flash image built on every `pio run`
+- Velxio simulation from a merged 4 MB flash image and an importable project zip, built on every `pio run`
 - Zed tasks and clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
@@ -59,11 +59,17 @@ Edit `src/main.cpp` to add your application code and `diagram.json` to add compo
 
 - Merged image: `.pio/build/esp32dev/firmware.merged.bin` (bootloader, partitions, `boot_app0` and app, 4 MB, DIO)
 
+Velxio does not recognise Wokwi's `board-esp32-devkit-c-v4` part, so the Velxio circuit lives in `velxio/diagram.json` (part type `board-velxio-esp32-devkit-c-v4`). `velxio_project.py` packs it with the sources (`src/main.cpp` as `sketch.ino`) into:
+
+- Project zip: `.pio/build/esp32dev/velxio-project.zip`
+
+Keep `velxio/diagram.json` in sync with `diagram.json` when you add parts.
+
 To run it in the [Velxio editor](https://velxio.dev/editor/) (free, no install):
 
 1. Build the project with `pio run`
-2. Add an **ESP32 DevKit C V4** board (or ESP32 DevKit V1) to the canvas
-3. Pick **Upload firmware** from the menu, select `firmware.merged.bin` and start the simulation
+2. Pick **Import project** from the menu and select `velxio-project.zip` (adds the ESP32 DevKit C V4 board and the code)
+3. Pick **Upload firmware**, select `firmware.merged.bin` and start the simulation
 4. Open the Serial Monitor to see `2 + 3 = 5`
 
 `velxio.toml` points the [Velxio VS Code extension](https://github.com/davidmonterocrespo24/velxio/tree/master/vscode-extension) (needs a Velxio Pro subscription or trial) at the same merged image, so `Velxio: Run Simulation` loads it without compiling. Velxio has no standalone CLI, so there is no Zed task or `mise.toml` entry for it.
@@ -79,6 +85,9 @@ To run it in the [Velxio editor](https://velxio.dev/editor/) (free, no install):
 ├── velxio.toml       # Velxio simulation configuration
 ├── compiledb.py      # Adds toolchain headers to compile_commands.json
 ├── merge_firmware.py # Builds the merged flash image for Velxio
+├── velxio_project.py # Builds the Velxio project zip
+├── velxio/
+│   └── diagram.json  # Velxio circuit definition
 ├── .clangd           # clangd settings for Zed
 ├── .zed/             # Zed tasks and project settings
 ├── src/
