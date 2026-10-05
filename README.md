@@ -4,10 +4,35 @@ A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
 Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio. It works in VS Code and in Zed.
 
+## arduino-esp32 3.x branch
+
+This `dev-arduino-3` branch builds with **arduino-esp32 3.3.12 on ESP-IDF 5.5.5**, through the community [pioarduino](https://github.com/pioarduino/platform-espressif32) platform. The `main` branch uses PlatformIO's official `espressif32` platform, which still ships arduino-esp32 2.0.x (ESP-IDF 4.4).
+
+Why use it:
+
+- **Newer core:** arduino-esp32 3.x brings the ESP-IDF 5 APIs, a newer GCC 14 toolchain, C++20, and the current Arduino ESP32 docs and libraries, which increasingly target 3.x only.
+- **Matches Velxio:** Velxio's ESP32 QEMU emulation is built and tested against arduino-esp32 3.3.x / ESP-IDF 5.5.
+
+The platform is pinned to an exact release in `platformio.ini`:
+
+```ini
+platform = https://github.com/pioarduino/platform-espressif32/releases/download/55.03.312-1/platform-espressif32.zip
+```
+
+To update, pick a newer release from the [pioarduino releases](https://github.com/pioarduino/platform-espressif32/releases) and change the version in the URL. Avoid the `stable` URL from the pioarduino README if you want reproducible builds.
+
+Differences from `main`:
+
+- Code written for arduino-esp32 2.x may need changes; see the [2.x to 3.0 migration guide](https://docs.espressif.com/projects/arduino-esp32/en/latest/migration_guides/2.x_to_3.0.html) (for example, the LEDC and timer APIs changed).
+- The first `pio run` downloads a much larger platform, toolchain and prebuilt ESP-IDF libraries (about 4 GB on disk) and can take several minutes.
+- The stock PlatformIO Core CLI (`pio`) and PlatformIO IDE work with the platform URL above. The [pioarduino IDE](https://marketplace.visualstudio.com/items?itemName=pioarduino.pioarduino-ide) extension also works; install one or the other, not both.
+- `esptool` is v5, so `merge_firmware.py` uses the v5 command names (`merge-bin`, `--flash-mode`, `--pad-to-size`).
+- clangd parses the code as Xtensa (`--target=xtensa-esp-elf` in `.clangd`), which needs a recent clangd (tested with clangd 23).
+
 ## Included
 
 - PlatformIO configuration for the ESP32 DevKit (`esp32dev`)
-- Arduino framework, serial monitor at 115200 baud
+- Arduino framework (arduino-esp32 3.x via pioarduino), serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
 - Velxio simulation from a merged 4 MB flash image built on every `pio run`
 - Zed tasks and clangd setup
@@ -48,7 +73,7 @@ The project also works in [Zed](https://zed.dev/) through the [PlatformIO Core C
    - Libraries: `Search Libraries for …`, `Install Library …`, `Uninstall Library …`, `List Installed Packages`, `Check Outdated Packages`, `Update Packages`
    - Other: `Search Boards for …`, `System Info`, `Open PIO Home`, `Generate compile_commands.json (clangd)`
    - `Wokwi: Simulate` (build first)
-4. Run the `compile_commands.json` task once (and again after changing `platformio.ini` or libraries) so clangd can resolve `Arduino.h` and the ESP32 headers. `.clangd` removes GCC-only Xtensa flags that clang does not understand.
+4. Run the `compile_commands.json` task once (and again after changing `platformio.ini` or libraries) so clangd can resolve `Arduino.h` and the ESP32 headers. `.clangd` removes GCC-only Xtensa flags that clang does not understand and sets the Xtensa target.
 
 Build the project with:
 
@@ -56,7 +81,7 @@ Build the project with:
 pio run
 ```
 
-The first build downloads the ESP32 toolchain and Arduino core, so it takes a while.
+The first build downloads the pioarduino platform, the ESP32 toolchain and the Arduino core, so it takes a while.
 
 The Wokwi configuration uses the PlatformIO build output:
 
@@ -151,7 +176,7 @@ PlatformIO picks the upload port automatically on both systems. To choose one, r
 ├── mise.toml         # Dev tools (pio, wokwi-cli) for mise
 ├── wokwi.toml        # Wokwi simulation configuration
 ├── velxio.toml       # Velxio simulation configuration
-├── compiledb.py      # Adds toolchain headers to compile_commands.json
+├── compiledb.py      # Adds GCC's toolchain headers to compile_commands.json
 ├── port_select.py    # Adds `pio run -t select_port`
 ├── merge_firmware.py # Builds the merged flash image for Velxio
 ├── .clangd           # clangd settings for Zed
