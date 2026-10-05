@@ -5,6 +5,7 @@ CompileFlags:
   Remove:
     - -mlongcalls
     - -mtext-section-literals
+    - -mdisable-hardware-atomics
     - -mfix-esp32-psram-cache-issue
     - -mfix-esp32-psram-cache-strategy=*
     - -fstrict-volatile-bitfields
@@ -13,3 +14,7 @@ CompileFlags:
     - -fno-jump-tables
   Add:
     - -Wno-unknown-attributes
+    # Parse as Xtensa, not the host: ESP-IDF 5.x headers pick xtensa/riscv code
+    # by __XTENSA__, and newlib types (ssize_t, ...) need a 32-bit target.
+    # Needs a recent clangd with the Xtensa target (tested with clangd 23).
+    - --target=xtensa-esp-elf
