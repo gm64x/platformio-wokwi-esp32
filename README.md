@@ -2,7 +2,7 @@
 
 A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
-Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio.
+Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio. It works in VS Code and in Zed.
 
 ## Included
 
@@ -13,6 +13,16 @@ Use this repository as a base for ESP32 projects that need local development wit
 - Zed tasks and clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
+
+## Use as a template
+
+Click **Use this template** on GitHub, or create a new project from the terminal:
+
+```bash
+gh repo create my-project --template gm64x/platformio-wokwi-esp32 --public --clone
+```
+
+Looking for the Arduino Uno version? See [platformio-wokwi-arduino-uno](https://github.com/gm64x/platformio-wokwi-arduino-uno).
 
 ## Getting started
 
