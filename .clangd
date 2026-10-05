@@ -1,0 +1,15 @@
+# clangd configuration for PlatformIO (ESP32 / Xtensa) projects.
+# Generate compile_commands.json first: `pio run -t compiledb`
+CompileFlags:
+  # GCC/Xtensa-only flags that clang does not understand
+  Remove:
+    - -mlongcalls
+    - -mtext-section-literals
+    - -mfix-esp32-psram-cache-issue
+    - -mfix-esp32-psram-cache-strategy=*
+    - -fstrict-volatile-bitfields
+    - -fno-tree-switch-conversion
+    - -freorder-blocks
+    - -fno-jump-tables
+  Add:
+    - -Wno-unknown-attributes
