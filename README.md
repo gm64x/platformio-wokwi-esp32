@@ -43,7 +43,7 @@ The project also works in [Zed](https://zed.dev/) through the [PlatformIO Core C
 1. Install PlatformIO Core and make sure `pio` is on your `PATH`, or run `mise install` to get `pio` and `wokwi-cli` from `mise.toml` with [mise](https://mise.jdx.dev/)
 2. Open the folder in Zed
 3. Run `task: spawn` (`alt-shift-t`) and pick a task from `.zed/tasks.json`:
-   - Build and upload: `Build`, `Upload`, `Upload and Monitor`, `Serial Monitor`, `Clean`, `Test`, `Program Size`, `Verbose Build`, `Static Code Analysis`, `Erase Flash`, `Erase Flash and Upload`
+   - Build and upload: `Build`, `Upload`, `Upload and Monitor`, `Build Filesystem Image`, `Upload Filesystem Image`, `Serial Monitor`, `Clean`, `Test`, `Program Size`, `Verbose Build`, `Static Code Analysis`, `Erase Flash`, `Erase Flash and Upload`
    - Ports: `List Devices (Serial Ports)`, `Select Port`, `Upload to Port …`, `Serial Monitor on Port …`
    - Libraries: `Search Libraries for …`, `Install Library …`, `Uninstall Library …`, `List Installed Packages`, `Check Outdated Packages`, `Update Packages`
    - Other: `Search Boards for …`, `System Info`, `Open PIO Home`, `Generate compile_commands.json (clangd)`
@@ -55,6 +55,8 @@ Build the project with:
 ```bash
 pio run
 ```
+
+For the LittleFS files in `data/`, use the `PlatformIO: Build Filesystem Image` and `PlatformIO: Upload Filesystem Image` tasks in Zed or VS Code, or run `mise run build-fs` and `mise run upload-fs`. Filesystem upload is separate from firmware upload; see [`data/README.md`](data/README.md).
 
 The first build downloads the ESP32 toolchain and Arduino core, so it takes a while.
 
@@ -160,6 +162,7 @@ PlatformIO picks the upload port automatically on both systems. To choose one, r
 │   └── main.cpp      # Application entry point
 ├── include/          # Project headers
 ├── lib/              # Project libraries
+├── data/             # LittleFS files uploaded separately from firmware
 └── test/             # PlatformIO tests
 ```
 

@@ -29,6 +29,32 @@
     ]
   },
   {
+    "label": "PlatformIO: Build Filesystem Image",
+    "command": "pio",
+    "args": [
+      "run",
+      "--target",
+      "buildfs"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": [
+      "pio"
+    ]
+  },
+  {
+    "label": "PlatformIO: Upload Filesystem Image",
+    "command": "pio",
+    "args": [
+      "run",
+      "--target",
+      "uploadfs"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": [
+      "pio"
+    ]
+  },
+  {
     "label": "PlatformIO: Upload and Monitor",
     "command": "pio",
     "args": [

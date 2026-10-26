@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "PlatformIO: Build Filesystem Image",
+      "type": "process",
+      "command": "pio",
+      "args": ["run", "--target", "buildfs"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Upload Filesystem Image",
+      "type": "process",
+      "command": "pio",
+      "args": ["run", "--target", "uploadfs"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
