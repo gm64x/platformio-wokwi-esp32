@@ -4,7 +4,7 @@ A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
 Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio. It works in VS Code and in Zed.
 
-> The LittleFS filesystem upload workflow is currently available on the [`feat/littlefs-filesystem-tasks`](https://github.com/gm64x/platformio-wokwi-esp32/tree/feat/littlefs-filesystem-tasks) branch; it is not part of `main` until that branch is merged.
+> The LittleFS data upload workflow (filesystem configuration, Linux/Windows upload scripts, and Zed/VS Code/mise tasks) is available on the [`feat/littlefs-filesystem-tasks`](https://github.com/gm64x/platformio-wokwi-esp32/tree/feat/littlefs-filesystem-tasks) branch and has not yet been merged into `main`.
 
 ## Included
 
@@ -12,7 +12,7 @@ Use this repository as a base for ESP32 projects that need local development wit
 - Arduino framework, serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
 - Velxio simulation from a merged 4 MB flash image built on every `pio run`
-- Zed tasks and clangd setup
+- VS Code and Zed task configurations, plus clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
 
@@ -155,13 +155,14 @@ PlatformIO picks the upload port automatically on both systems. To choose one, r
 ├── mise.toml         # Dev tools (pio, wokwi-cli) for mise
 ├── wokwi.toml        # Wokwi simulation configuration
 ├── velxio.toml       # Velxio simulation configuration
-├── scripts/          # PlatformIO hooks and cross-platform filesystem uploader
+├── scripts/          # PlatformIO hooks and filesystem upload scripts
 │   ├── compiledb.py
 │   ├── merge_firmware.py
 │   ├── port_select.py
 │   ├── upload-filesystem.ps1
 │   └── upload-filesystem.sh
 ├── .clangd           # clangd settings for Zed
+├── .vscode/          # VS Code settings and tasks
 ├── .zed/             # Zed tasks and project settings
 ├── src/
 │   └── main.cpp      # Application entry point

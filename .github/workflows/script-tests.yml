@@ -1,0 +1,30 @@
+name: Script tests
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+      - ".github/workflows/script-tests.yml"
+  pull_request:
+    paths:
+      - "scripts/**"
+      - ".github/workflows/script-tests.yml"
+
+jobs:
+  upload-wrapper:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test Linux uploader
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash scripts/tests/test-upload-filesystem.sh
+
+      - name: Test Windows uploader
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: ./scripts/tests/test-upload-filesystem.ps1
