@@ -4,6 +4,8 @@ A reusable ESP32 DevKit starter project for PlatformIO, Wokwi and Velxio.
 
 Use this repository as a base for ESP32 projects that need local development with PlatformIO and circuit simulation with Wokwi or Velxio. It works in VS Code and in Zed.
 
+> The LittleFS filesystem upload workflow is currently available on the [`feat/littlefs-filesystem-tasks`](https://github.com/gm64x/platformio-wokwi-esp32/tree/feat/littlefs-filesystem-tasks) branch; it is not part of `main` until that branch is merged.
+
 ## Included
 
 - PlatformIO configuration for the ESP32 DevKit (`esp32dev`), pinned to the official `platformio/espressif32 @ 7.1.3` platform (arduino-esp32 2.0.17). For arduino-esp32 3.x see the `dev/arduino-3` branch
@@ -56,7 +58,7 @@ Build the project with:
 pio run
 ```
 
-For the LittleFS files in `data/`, use the `PlatformIO: Build Filesystem Image` and `PlatformIO: Upload Filesystem Image` tasks in Zed or VS Code, or run `mise run build-fs` and `mise run upload-fs`. Filesystem upload is separate from firmware upload; see [`data/README.md`](data/README.md).
+For the LittleFS files in `data/`, use the `PlatformIO: Build Filesystem Image` and `PlatformIO: Upload Filesystem Image` tasks in Zed or VS Code, or run `mise run build-fs` and `mise run upload-fs`. Filesystem upload is separate from firmware upload; see [`data/README.md`](data/README.md). These tasks are available on the feature branch linked above. Install mise to use the editor tasks.
 
 The first build downloads the ESP32 toolchain and Arduino core, so it takes a while.
 
@@ -69,7 +71,7 @@ Edit `src/main.cpp` to add your application code and `diagram.json` to add compo
 
 ### Using Velxio
 
-[Velxio](https://velxio.dev/) is an open-source browser simulator for Arduino, ESP32 and Raspberry Pi boards. It runs ESP32 firmware in QEMU, which boots from a full flash image instead of the app-only `firmware.bin`, so `merge_firmware.py` runs after every build and writes:
+[Velxio](https://velxio.dev/) is an open-source browser simulator for Arduino, ESP32 and Raspberry Pi boards. It runs ESP32 firmware in QEMU, which boots from a full flash image instead of the app-only `firmware.bin`, so `scripts/merge_firmware.py` runs after every build and writes:
 
 - Merged image: `.pio/build/esp32dev/firmware.merged.bin` (bootloader, partitions, `boot_app0` and app, 4 MB, DIO)
 
@@ -153,9 +155,12 @@ PlatformIO picks the upload port automatically on both systems. To choose one, r
 ├── mise.toml         # Dev tools (pio, wokwi-cli) for mise
 ├── wokwi.toml        # Wokwi simulation configuration
 ├── velxio.toml       # Velxio simulation configuration
-├── compiledb.py      # Adds toolchain headers to compile_commands.json
-├── port_select.py    # Adds `pio run -t select_port`
-├── merge_firmware.py # Builds the merged flash image for Velxio
+├── scripts/          # PlatformIO hooks and cross-platform filesystem uploader
+│   ├── compiledb.py
+│   ├── merge_firmware.py
+│   ├── port_select.py
+│   ├── upload-filesystem.ps1
+│   └── upload-filesystem.sh
 ├── .clangd           # clangd settings for Zed
 ├── .zed/             # Zed tasks and project settings
 ├── src/

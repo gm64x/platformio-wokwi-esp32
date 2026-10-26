@@ -4,8 +4,8 @@
     {
       "label": "PlatformIO: Build Filesystem Image",
       "type": "process",
-      "command": "pio",
-      "args": ["run", "--target", "buildfs"],
+      "command": "mise",
+      "args": ["run", "build-fs"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -14,8 +14,8 @@
     {
       "label": "PlatformIO: Upload Filesystem Image",
       "type": "process",
-      "command": "pio",
-      "args": ["run", "--target", "uploadfs"],
+      "command": "mise",
+      "args": ["run", "upload-fs"],
       "options": {
         "cwd": "${workspaceFolder}"
       },

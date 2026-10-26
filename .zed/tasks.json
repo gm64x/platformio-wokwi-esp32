@@ -30,11 +30,10 @@
   },
   {
     "label": "PlatformIO: Build Filesystem Image",
-    "command": "pio",
+    "command": "mise",
     "args": [
       "run",
-      "--target",
-      "buildfs"
+      "build-fs"
     ],
     "cwd": "$ZED_WORKTREE_ROOT",
     "tags": [
@@ -43,11 +42,10 @@
   },
   {
     "label": "PlatformIO: Upload Filesystem Image",
-    "command": "pio",
+    "command": "mise",
     "args": [
       "run",
-      "--target",
-      "uploadfs"
+      "upload-fs"
     ],
     "cwd": "$ZED_WORKTREE_ROOT",
     "tags": [

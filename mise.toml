@@ -10,4 +10,5 @@ run = "pio run -t buildfs"
 
 [tasks.upload-fs]
 description = "Upload the LittleFS image to the board"
-run = "pio run -t uploadfs"
+run = "bash scripts/upload-filesystem.sh"
+run_windows = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/upload-filesystem.ps1"

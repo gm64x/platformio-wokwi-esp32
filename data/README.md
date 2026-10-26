@@ -38,14 +38,28 @@ pio run -t uploadfs
 
 `buildfs` creates the filesystem image from the contents of `data/`; `uploadfs` sends that image to the board's filesystem partition. A normal `pio run` builds the firmware, and `pio run -t upload` uploads the firmware; neither command by itself uploads changed files from `data/`.
 
-The same two operations are available as editor and mise tasks:
+The upload scripts select the right shell for each operating system:
 
-| Operation | Zed / VS Code | mise |
+```sh
+# Linux
+bash scripts/upload-filesystem.sh
+```
+
+```powershell
+# Windows PowerShell
+.\scripts\upload-filesystem.ps1
+```
+
+They run PlatformIO's `uploadfs` target from the project root. The `mise run upload-fs` task selects the Bash script on Linux and the PowerShell script on Windows. The editor tasks in Zed and VS Code call these mise tasks, so the same workflow is available from all three environments:
+
+| Operation | Zed / VS Code | mise / terminal |
 | --- | --- | --- |
 | Build image only | `PlatformIO: Build Filesystem Image` | `mise run build-fs` |
 | Build and upload image | `PlatformIO: Upload Filesystem Image` | `mise run upload-fs` |
 
-In VS Code, open the Command Palette and choose **Tasks: Run Task**. In Zed, run `task: spawn` and select the task. The `uploadfs` task creates or refreshes the image before uploading it.
+In VS Code, open the Command Palette and choose **Tasks: Run Task**. In Zed, run `task: spawn` and select the task. `uploadfs` creates or refreshes the image before uploading it.
+
+The Linux and Windows scripts run on the computer; they do not mount the ESP32's filesystem on the host. The Arduino firmware mounts LittleFS on the board with `LittleFS.begin()` as shown below.
 
 After uploading, the Arduino firmware must mount LittleFS and open the files. For example:
 
