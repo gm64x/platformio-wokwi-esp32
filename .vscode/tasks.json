@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "PlatformIO: Build",
+      "type": "process",
+      "command": "pio",
+      "args": ["run"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Upload",
+      "type": "process",
+      "command": "pio",
+      "args": ["run", "--target", "upload"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Upload and Monitor",
+      "type": "process",
+      "command": "pio",
+      "args": ["run", "--target", "upload", "--target", "monitor"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Serial Monitor",
+      "type": "process",
+      "command": "pio",
+      "args": ["device", "monitor"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Clean",
+      "type": "process",
+      "command": "pio",
+      "args": ["run", "--target", "clean"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PlatformIO: Test",
+      "type": "process",
+      "command": "pio",
+      "args": ["test"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

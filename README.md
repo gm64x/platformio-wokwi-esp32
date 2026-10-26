@@ -12,7 +12,7 @@ Use this repository as a base for ESP32 projects that need local development wit
 - Arduino framework, serial monitor at 115200 baud
 - Wokwi simulation with an ESP32 DevKit C v4 wired to the serial monitor
 - Velxio simulation from a merged 4 MB flash image built on every `pio run`
-- Zed tasks and clangd setup
+- VS Code and Zed task configurations, plus clangd setup
 - `mise.toml` with pinned `pio` and `wokwi-cli`
 - Standard PlatformIO project structure
 
@@ -69,7 +69,7 @@ Edit `src/main.cpp` to add your application code and `diagram.json` to add compo
 
 ### Using Velxio
 
-[Velxio](https://velxio.dev/) is an open-source browser simulator for Arduino, ESP32 and Raspberry Pi boards. It runs ESP32 firmware in QEMU, which boots from a full flash image instead of the app-only `firmware.bin`, so `merge_firmware.py` runs after every build and writes:
+[Velxio](https://velxio.dev/) is an open-source browser simulator for Arduino, ESP32 and Raspberry Pi boards. It runs ESP32 firmware in QEMU, which boots from a full flash image instead of the app-only `firmware.bin`, so `scripts/merge_firmware.py` runs after every build and writes:
 
 - Merged image: `.pio/build/esp32dev/firmware.merged.bin` (bootloader, partitions, `boot_app0` and app, 4 MB, DIO)
 
@@ -153,11 +153,13 @@ PlatformIO picks the upload port automatically on both systems. To choose one, r
 ├── mise.toml         # Dev tools (pio, wokwi-cli) for mise
 ├── wokwi.toml        # Wokwi simulation configuration
 ├── velxio.toml       # Velxio simulation configuration
-├── compiledb.py      # Adds toolchain headers to compile_commands.json
-├── port_select.py    # Adds `pio run -t select_port`
-├── merge_firmware.py # Builds the merged flash image for Velxio
+├── scripts/          # PlatformIO helper scripts
+│   ├── compiledb.py
+│   ├── merge_firmware.py
+│   └── port_select.py
 ├── .clangd           # clangd settings for Zed
-├── .zed/             # Zed tasks and project settings
+├── .vscode/          # VS Code settings and tasks
+└── .zed/             # Zed tasks and project settings
 ├── src/
 │   └── main.cpp      # Application entry point
 ├── include/          # Project headers
